@@ -5,9 +5,10 @@ uint8_t ring_buffer[RING_BUF_SIZE];
 
 static uint8_t idCMD[6]={0x75,0x76,0x77,0x78,0x79,0x7B};
 
-static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD4,CMD5,CMD6};
+static StatesCMD *FUNC[6]={CMD1,CMD1,CMD1,CMD1,CMD1,CMD1};
 
 char *bufferSendProtocol;
+uint8_t flagMsgRx= 0;
 
 const struct device *uart_dev ;
 
@@ -61,14 +62,14 @@ static void interrupt_handler(const struct device *dev, void *user_data)
 
 		}
 
-
+		flagMsgRx = 1;
 		// if (uart_irq_tx_ready(dev)) {
-		// 	// uint8_t buffer[64];
-		// 	// int rb_len, send_len;
-		// 	// rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
+			uint8_t buffer[64];
+			int rb_len;//, send_len;
+			rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
 
-            
-		// 	// /*ECO PARA TESTES*/ send_len = uart_fifo_fill(dev, buffer, rb_len);
+        // //  ReadMsg();   
+		// 	/*ECO PARA TESTES*/ send_len = uart_fifo_fill(dev, buffer, rb_len);
         //     /*tratar a resposta e encamiar para os estados*/
 		// }
 	}
@@ -96,7 +97,7 @@ void ReadMsg(){
 		memcpy(protocolo.msg,&buffer[1],rb_len -4);
 
 		if( crc16calc(protocolo.msg,rb_len -4 ) == (protocolo.crc[0]<<8 | protocolo.crc[1])){
-			ProceduresMsg(protocolo.msg);
+			// ProceduresMsg(protocolo.msg);
 		}
 		else{
 			char NAKMSG[] = {0x15,protocolo.msg[1],0x0A};
@@ -164,7 +165,7 @@ void SendMsg(char*msg1,int len){
 
 /**
  * @brief EncapsulationMsgs
- * 		Esta função encapsula dados a serem enviado para um protocolo.
+ * 		Esta função encapsula os dados a serem enviado para um protocolo.
  *
  * @param data1, recebe o ponteiro dos dados que serão encapsulados.
  *
@@ -220,4 +221,13 @@ void ProceduresMsg(char *data) {
 	default:
 		SendMsg(NAKMSG, 3);
 	}
+}
+
+//testes
+void CMD1(char *data){
+	char MSG[] = {0x40,data[1],data[2]};
+	SendMsg(MSG,3);
+	if (bufferSendProtocol != NULL)k_free(bufferSendProtocol);
+	bufferSendProtocol = (uint8_t *)k_calloc(1,sizeof(MSG));
+	memcpy(bufferSendProtocol,MSG,sizeof(MSG));
 }

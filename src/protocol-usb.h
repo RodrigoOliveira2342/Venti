@@ -10,6 +10,8 @@
 #include <usb/usb_device.h>
 #include <logging/log.h>
 
+#include <kernel.h>
+
 #define RING_BUF_SIZE 1024
 
 #define HEADER 0x76
@@ -23,6 +25,9 @@ typedef struct{
 	char *msg;
 	uint8_t crc[2];
 }Protocolo_t;
+
+extern const struct device *uart_dev;
+extern uint8_t flagMsgRx;
 
 typedef void StatesCMD(char * Dados);
 
