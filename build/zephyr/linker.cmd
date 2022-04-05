@@ -241,7 +241,6 @@ __ramfunc_load_start = LOADADDR(.ramfunc);
  k_mbox_area : ALIGN_WITH_INPUT SUBALIGN(4) { _k_mbox_list_start = .; *(SORT_BY_NAME(._k_mbox.static.*)); _k_mbox_list_end = .; } > SRAM AT > FLASH
  k_pipe_area : ALIGN_WITH_INPUT SUBALIGN(4) { _k_pipe_list_start = .; *(SORT_BY_NAME(._k_pipe.static.*)); _k_pipe_list_end = .; } > SRAM AT > FLASH
  k_sem_area : ALIGN_WITH_INPUT SUBALIGN(4) { _k_sem_list_start = .; *(SORT_BY_NAME(._k_sem.static.*)); _k_sem_list_end = .; } > SRAM AT > FLASH
- k_event_area : ALIGN_WITH_INPUT SUBALIGN(4) { _k_event_list_start = .; *(SORT_BY_NAME(._k_event.static.*)); _k_event_list_end = .; } > SRAM AT > FLASH
  k_queue_area : ALIGN_WITH_INPUT SUBALIGN(4) { _k_queue_list_start = .; *(SORT_BY_NAME(._k_queue.static.*)); _k_queue_list_end = .; } > SRAM AT > FLASH
  k_condvar_area : ALIGN_WITH_INPUT SUBALIGN(4) { _k_condvar_list_start = .; *(SORT_BY_NAME(._k_condvar.static.*)); _k_condvar_list_end = .; } > SRAM AT > FLASH
  _net_buf_pool_area : ALIGN_WITH_INPUT SUBALIGN(4)
@@ -256,7 +255,13 @@ __ramfunc_load_start = LOADADDR(.ramfunc);
   KEEP(*(SORT_BY_NAME(".usb.descriptor*")))
   __usb_descriptor_end = .;
  } > SRAM AT > FLASH
- usb_cfg_data_area : ALIGN_WITH_INPUT SUBALIGN(4) { _usb_cfg_data_list_start = .; KEEP(*(SORT_BY_NAME(._usb_cfg_data.static.*))); _usb_cfg_data_list_end = .; } > SRAM AT > FLASH
+ usb_data : ALIGN_WITH_INPUT SUBALIGN(1)
+ {
+  __usb_data_start = .;
+  *(".usb.data")
+  KEEP(*(SORT_BY_NAME(".usb.data*")))
+  __usb_data_end = .;
+ } > SRAM AT > FLASH
     __data_region_end = .;
    bss (NOLOAD) : ALIGN_WITH_INPUT
  {
@@ -313,9 +318,6 @@ __ramfunc_load_start = LOADADDR(.ramfunc);
  .debug_pubtypes 0 : { *(.debug_pubtypes) }
  .debug_ranges 0 : { *(.debug_ranges) }
  .debug_macro 0 : { *(.debug_macro) }
- .debug_line_str 0 : { *(.debug_line_str) }
- .debug_loclists 0 : { *(.debug_loclists) }
- .debug_rnglists 0 : { *(.debug_rnglists) }
     /DISCARD/ : { *(.note.GNU-stack) }
     .ARM.attributes 0 :
  {

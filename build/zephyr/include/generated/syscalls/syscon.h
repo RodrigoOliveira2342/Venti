@@ -4,15 +4,12 @@
 #define Z_INCLUDE_SYSCALLS_SYSCON_H
 
 
-#include <tracing/tracing_syscall.h>
-
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
-
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -44,13 +41,6 @@ static inline int syscon_get_base(const struct device * dev, uintptr_t * addr)
 	return z_impl_syscon_get_base(dev, addr);
 }
 
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define syscon_get_base(dev, addr) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SYSCON_GET_BASE, syscon_get_base, dev, addr); 	retval = syscon_get_base(dev, addr); 	sys_port_trace_syscall_exit(K_SYSCALL_SYSCON_GET_BASE, syscon_get_base, dev, addr, retval); 	retval; })
-#endif
-#endif
-
 
 extern int z_impl_syscon_read_reg(const struct device * dev, uint16_t reg, uint32_t * val);
 
@@ -66,13 +56,6 @@ static inline int syscon_read_reg(const struct device * dev, uint16_t reg, uint3
 	compiler_barrier();
 	return z_impl_syscon_read_reg(dev, reg, val);
 }
-
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define syscon_read_reg(dev, reg, val) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SYSCON_READ_REG, syscon_read_reg, dev, reg, val); 	retval = syscon_read_reg(dev, reg, val); 	sys_port_trace_syscall_exit(K_SYSCALL_SYSCON_READ_REG, syscon_read_reg, dev, reg, val, retval); 	retval; })
-#endif
-#endif
 
 
 extern int z_impl_syscon_write_reg(const struct device * dev, uint16_t reg, uint32_t val);
@@ -90,13 +73,6 @@ static inline int syscon_write_reg(const struct device * dev, uint16_t reg, uint
 	return z_impl_syscon_write_reg(dev, reg, val);
 }
 
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define syscon_write_reg(dev, reg, val) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SYSCON_WRITE_REG, syscon_write_reg, dev, reg, val); 	retval = syscon_write_reg(dev, reg, val); 	sys_port_trace_syscall_exit(K_SYSCALL_SYSCON_WRITE_REG, syscon_write_reg, dev, reg, val, retval); 	retval; })
-#endif
-#endif
-
 
 extern int z_impl_syscon_get_size(const struct device * dev, size_t * size);
 
@@ -112,13 +88,6 @@ static inline int syscon_get_size(const struct device * dev, size_t * size)
 	compiler_barrier();
 	return z_impl_syscon_get_size(dev, size);
 }
-
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define syscon_get_size(dev, size) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_SYSCON_GET_SIZE, syscon_get_size, dev, size); 	retval = syscon_get_size(dev, size); 	sys_port_trace_syscall_exit(K_SYSCALL_SYSCON_GET_SIZE, syscon_get_size, dev, size, retval); 	retval; })
-#endif
-#endif
 
 
 #ifdef __cplusplus

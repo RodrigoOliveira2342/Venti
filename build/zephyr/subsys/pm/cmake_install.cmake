@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/RDG/ncs/v1.9.1/zephyr/subsys/pm
+# Install script for directory: C:/Users/LAPADA/ncs/v1.8.0/zephyr/subsys/pm
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,11 +34,11 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/RDG/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Users/LAPADA/ncs/v1.8.0/toolchain/opt/bin/arm-none-eabi-objdump.exe")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/pm/policy/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/pm/policy/cmake_install.cmake")
 endif()
 

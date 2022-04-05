@@ -1,1 +1,7 @@
-osource "C:/Users/RDG/ncs/v1.9.1/nrf/boards/shields/*/Kconfig.shield"
+osource "c:/Users/LAPADA/Documents/NRF-T01/adc1/boards/shields/*/Kconfig.shield"
+osource "c:/Users/LAPADA/Documents/NRF-T01/adc3/boards/shields/*/Kconfig.shield"
+osource "c:/Users/LAPADA/Documents/NRF-T01/adc9/boards/shields/*/Kconfig.shield"
+osource "c:/Users/LAPADA/Documents/NRF-T01/peripheral_hr/boards/shields/*/Kconfig.shield"
+osource "c:/Users/LAPADA/Documents/NRF-T01/littlefsA100/boards/shields/*/Kconfig.shield"
+osource "c:/Users/LAPADA/Documents/NRF-T01/adc10/boards/shields/*/Kconfig.shield"
+osource "C:/Users/LAPADA/ncs/v1.8.0/nrf/boards/shields/*/Kconfig.shield"

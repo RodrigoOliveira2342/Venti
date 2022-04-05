@@ -1,7 +1,7 @@
-The target system is: Generic - 2.7.99 - arm
-The host system is: Windows - 6.3.9600 - AMD64
+The target system is: Generic - 2.7.0 - arm
+The host system is: Windows - 10.0.19044 - AMD64
 Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
-Compiler: C:/Users/RDG/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-gcc.exe 
+Compiler: C:/Users/LAPADA/ncs/v1.8.0/toolchain/opt/bin/arm-none-eabi-gcc.exe 
 Build flags: 
 Id flags: -c 
 
@@ -11,10 +11,10 @@ The output was:
 
 Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
 
-The C compiler identification is GNU, found in "C:/Users/RDG/Documents/NRF-DESK/Venti/build/CMakeFiles/3.20.5/CompilerIdC/CMakeCCompilerId.o"
+The C compiler identification is GNU, found in "C:/Users/LAPADA/Documents/NRF-T01/Venti/build/CMakeFiles/3.20.5/CompilerIdC/CMakeCCompilerId.o"
 
 Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
-Compiler: C:/Users/RDG/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-gcc.exe 
+Compiler: C:/Users/LAPADA/ncs/v1.8.0/toolchain/opt/bin/arm-none-eabi-gcc.exe 
 Build flags: 
 Id flags: -c 
 
@@ -24,7 +24,7 @@ The output was:
 
 Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
 
-The CXX compiler identification is GNU, found in "C:/Users/RDG/Documents/NRF-DESK/Venti/build/CMakeFiles/3.20.5/CompilerIdCXX/CMakeCXXCompilerId.o"
+The CXX compiler identification is GNU, found in "C:/Users/LAPADA/Documents/NRF-T01/Venti/build/CMakeFiles/3.20.5/CompilerIdCXX/CMakeCXXCompilerId.o"
 
 Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
 arm-none-eabi-gcc.exe (GNU Tools for Arm Embedded Processors 9-2019-q4-major) 9.2.1 20191025 (release) [ARM/arm-9-branch revision 277599]
@@ -32,12 +32,3 @@ Copyright (C) 2019 Free Software Foundation, Inc.
 This is free software; see the source for copying conditions.  There is NO
 warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-Performing C SOURCE FILE Test check_fmacro_prefix_map_C__Users_RDG_Documents_NRF_DESK_Venti_CMAKE_SOURCE_DIR_C__nostartfiles__nostdlib__isystem__c__users_rdg_ncs_v1_9_1_toolchain_opt_bin____lib_gcc_arm_none_eabi_9_2_1_include___isystem__c__users_rdg_ncs_v1_9_1_toolchain_opt_bin____lib_gcc_arm_none_eabi_9_2_1_include_fixed___Wl___unresolved_symbols_ignore_in_object_files__Wl___entry_0 succeeded with the following output:
-Change Dir: C:/Users/RDG/Documents/NRF-DESK/Venti/build/CMakeFiles/CMakeTmp
-
-Run Build Command(s):C:/Users/RDG/ncs/v1.9.1/toolchain/opt/bin/ninja.exe cmTC_dc14f && [1/2] Building C object CMakeFiles/cmTC_dc14f.dir/src.c.obj
-[2/2] Linking C executable cmTC_dc14f
-
-
-Source file was:
-int main(void) { return 0; }

@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/RDG/ncs/v1.9.1/zephyr/subsys
+# Install script for directory: C:/Users/LAPADA/ncs/v1.8.0/zephyr/subsys
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,91 +34,91 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "C:/Users/RDG/ncs/v1.9.1/toolchain/opt/bin/arm-none-eabi-objdump.exe")
+  set(CMAKE_OBJDUMP "C:/Users/LAPADA/ncs/v1.8.0/toolchain/opt/bin/arm-none-eabi-objdump.exe")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/debug/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/debug/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/logging/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/logging/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/fs/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fs/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/ipc/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/ipc/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/mgmt/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/mgmt/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/usb/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/usb/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/random/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/random/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/storage/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/storage/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/fb/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fb/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/portability/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/portability/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/pm/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/pm/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/stats/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/stats/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/task_wdt/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/task_wdt/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/testsuite/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/testsuite/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/tracing/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/tracing/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/canbus/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/canbus/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("C:/Users/RDG/Documents/NRF-DESK/Venti/build/zephyr/subsys/modbus/cmake_install.cmake")
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/modbus/cmake_install.cmake")
 endif()
 

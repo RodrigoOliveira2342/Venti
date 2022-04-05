@@ -4,15 +4,12 @@
 #define Z_INCLUDE_SYSCALLS_I2S_H
 
 
-#include <tracing/tracing_syscall.h>
-
 #ifndef _ASMLANGUAGE
 
 #include <syscall_list.h>
 #include <syscall.h>
 
 #include <linker/sections.h>
-
 
 #if __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)
 #pragma GCC diagnostic push
@@ -44,13 +41,6 @@ static inline int i2s_configure(const struct device * dev, enum i2s_dir dir, con
 	return z_impl_i2s_configure(dev, dir, cfg);
 }
 
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define i2s_configure(dev, dir, cfg) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_I2S_CONFIGURE, i2s_configure, dev, dir, cfg); 	retval = i2s_configure(dev, dir, cfg); 	sys_port_trace_syscall_exit(K_SYSCALL_I2S_CONFIGURE, i2s_configure, dev, dir, cfg, retval); 	retval; })
-#endif
-#endif
-
 
 extern int z_impl_i2s_buf_read(const struct device * dev, void * buf, size_t * size);
 
@@ -66,13 +56,6 @@ static inline int i2s_buf_read(const struct device * dev, void * buf, size_t * s
 	compiler_barrier();
 	return z_impl_i2s_buf_read(dev, buf, size);
 }
-
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define i2s_buf_read(dev, buf, size) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_I2S_BUF_READ, i2s_buf_read, dev, buf, size); 	retval = i2s_buf_read(dev, buf, size); 	sys_port_trace_syscall_exit(K_SYSCALL_I2S_BUF_READ, i2s_buf_read, dev, buf, size, retval); 	retval; })
-#endif
-#endif
 
 
 extern int z_impl_i2s_buf_write(const struct device * dev, void * buf, size_t size);
@@ -90,13 +73,6 @@ static inline int i2s_buf_write(const struct device * dev, void * buf, size_t si
 	return z_impl_i2s_buf_write(dev, buf, size);
 }
 
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define i2s_buf_write(dev, buf, size) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_I2S_BUF_WRITE, i2s_buf_write, dev, buf, size); 	retval = i2s_buf_write(dev, buf, size); 	sys_port_trace_syscall_exit(K_SYSCALL_I2S_BUF_WRITE, i2s_buf_write, dev, buf, size, retval); 	retval; })
-#endif
-#endif
-
 
 extern int z_impl_i2s_trigger(const struct device * dev, enum i2s_dir dir, enum i2s_trigger_cmd cmd);
 
@@ -112,13 +88,6 @@ static inline int i2s_trigger(const struct device * dev, enum i2s_dir dir, enum 
 	compiler_barrier();
 	return z_impl_i2s_trigger(dev, dir, cmd);
 }
-
-#if (CONFIG_TRACING_SYSCALL == 1)
-#ifndef DISABLE_SYSCALL_TRACING
-
-#define i2s_trigger(dev, dir, cmd) ({ 	int retval; 	sys_port_trace_syscall_enter(K_SYSCALL_I2S_TRIGGER, i2s_trigger, dev, dir, cmd); 	retval = i2s_trigger(dev, dir, cmd); 	sys_port_trace_syscall_exit(K_SYSCALL_I2S_TRIGGER, i2s_trigger, dev, dir, cmd, retval); 	retval; })
-#endif
-#endif
 
 
 #ifdef __cplusplus
