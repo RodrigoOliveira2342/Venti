@@ -20,14 +20,26 @@
 #define PZERO {0x00,{0x00}}
 
 typedef struct{
-	uint8_t *msg;
+	char *msg;
 	uint8_t crc[2];
 }Protocolo_t;
 
+typedef void StatesCMD(char * Dados);
 
-// static void interrupt_handler(const struct device *dev, void *user_data);
+
+void CMD1(char * data); // Calibração do sensor de oxigênio
+void CMD2(char * data); // Leitura da carga de bateria  
+void CMD3(char * data); // Leituras do fluxo, pressão e FiO2
+void CMD4(char * data); // Zerar os transdutores
+void CMD5(char * data); // Calibrar um ponto de fluxo
+void CMD6(char * data); // Leitura da tabela de calibração atualizada
+
+
+uint16_t crc16calc(char* pData, int length);
 void configureUSB();
 void ReadMsg();
 void EncapsulationMsgs(char *data1,char *data2,int len);
-// uint16_t crc16(char* pData, int length);
 void SendMsg(char*msg1,int len);
+void ProceduresMsg(char *data);
+
+

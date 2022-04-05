@@ -3,6 +3,12 @@
 struct ring_buf ringbuf;
 uint8_t ring_buffer[RING_BUF_SIZE];
 
+static uint8_t idCMD[6]={0x75,0x76,0x77,0x78,0x79,0x7B};
+
+static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD4,CMD5,CMD6};
+
+char *bufferSendProtocol;
+
 const struct device *uart_dev ;
 
 
@@ -56,15 +62,15 @@ static void interrupt_handler(const struct device *dev, void *user_data)
 		}
 
 
-		if (uart_irq_tx_ready(dev)) {
-			// uint8_t buffer[64];
-			// int rb_len, send_len;
-			// rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
+		// if (uart_irq_tx_ready(dev)) {
+		// 	// uint8_t buffer[64];
+		// 	// int rb_len, send_len;
+		// 	// rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
 
             
-			// /*ECO PARA TESTES*/ send_len = uart_fifo_fill(dev, buffer, rb_len);
-            /*tratar a resposta e encamiar para os estados*/
-		}
+		// 	// /*ECO PARA TESTES*/ send_len = uart_fifo_fill(dev, buffer, rb_len);
+        //     /*tratar a resposta e encamiar para os estados*/
+		// }
 	}
 }
 
@@ -90,7 +96,7 @@ void ReadMsg(){
 		memcpy(protocolo.msg,&buffer[1],rb_len -4);
 
 		if( crc16calc(protocolo.msg,rb_len -4 ) == (protocolo.crc[0]<<8 | protocolo.crc[1])){
-			// ProceduresMsg(protocolo.msg);
+			ProceduresMsg(protocolo.msg);
 		}
 		else{
 			char NAKMSG[] = {0x15,protocolo.msg[1],0x0A};
@@ -103,8 +109,8 @@ void ReadMsg(){
 
 void configureUSB(){
     const struct device *dev;
-	uart_dev = DEVICE_DT_GET_ONE(zephyr_cdc_acm_uart);
-	dev = uart_dev;
+	dev = DEVICE_DT_GET_ONE(zephyr_cdc_acm_uart);
+	uart_dev = dev;
 	uint32_t baudrate, dtr = 0U;
 	int ret;
 
@@ -178,3 +184,40 @@ void SendMsg(char*msg1,int len){
 	 data2[i+2] = 0xFF;
 
  }
+
+
+ 
+/**
+ * @brief ProceduresMsg
+ * 		Esta função inicia a leitura de um comando externo e direciona para a função adequada.
+ *
+ * @param data, recebe um ponteiro para os dados da mensagem.
+ */
+void ProceduresMsg(char *data) {
+	char NAKMSG[] = { 0x15, data[1], data[1] };
+	switch (data[0]) {
+	case 0x30:
+		for (uint8_t f = 0; f < 10; f++) {
+			if (data[1] == idCMD[f]) {
+				FUNC[f](data);
+				break;
+			}
+		}
+		break;
+	case 0x15:
+		if (bufferSendProtocol != NULL)
+			ProceduresMsg(bufferSendProtocol);
+		break;
+	case 0x06:
+		if (bufferSendProtocol != NULL){
+			k_free(bufferSendProtocol);
+			bufferSendProtocol = NULL;
+		}
+		break;
+	case 0x40:
+		SendMsg(bufferSendProtocol, 5);
+		break;
+	default:
+		SendMsg(NAKMSG, 3);
+	}
+}
