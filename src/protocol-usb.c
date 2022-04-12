@@ -6,9 +6,10 @@ uint8_t ring_buffer[RING_BUF_SIZE];
 static uint8_t idCMD[6]={0x75,0x76,0x77,0x78,0x79,0x7B};
 
 static StatesCMD *FUNC[6]={CMD1,CMD1,CMD1,CMD1,CMD1,CMD1};
-
-char *bufferSendProtocol;
 uint8_t flagMsgRx= 0;
+
+char bufferACK[128];
+uint8_t lenBufferACK = 0;
 
 const struct device *uart_dev ;
 
@@ -64,13 +65,14 @@ static void interrupt_handler(const struct device *dev, void *user_data)
 
 		flagMsgRx = 1;
 		// if (uart_irq_tx_ready(dev)) {
-			uint8_t buffer[64];
+			// flagMsgRx = 1;
+			uint8_t buffer2[64];
 			int rb_len;//, send_len;
-			rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
-
+			rb_len = ring_buf_get(&ringbuf, buffer2, sizeof(buffer2));
+			// uart_fifo_fill(dev, buffer2, rb_len);
+			// SendMsg(buffer2, rb_len);
+		// }
         // //  ReadMsg();   
-		// 	/*ECO PARA TESTES*/ send_len = uart_fifo_fill(dev, buffer, rb_len);
-        //     /*tratar a resposta e encamiar para os estados*/
 		// }
 	}
 }
@@ -86,24 +88,23 @@ static void interrupt_handler(const struct device *dev, void *user_data)
 
 void ReadMsg(){
 	uint8_t buffer[64];
+	uint8_t commandAPayload[16];
+	uint8_t crc[2];
 	int rb_len;
 	rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
-	Protocolo_t protocolo = PZERO;
-
-	memcpy(protocolo.crc,&buffer[rb_len-3],2);
 
 	if(buffer[0]== 0x7E && buffer[rb_len-1] == 0xFF && rb_len >6){
-		protocolo.msg = (uint8_t *)k_calloc(rb_len-4,sizeof(uint8_t));
-		memcpy(protocolo.msg,&buffer[1],rb_len -4);
 
-		if( crc16calc(protocolo.msg,rb_len -4 ) == (protocolo.crc[0]<<8 | protocolo.crc[1])){
+		memcpy(commandAPayload,&buffer[1],rb_len -4);
+		memcpy(crc,&buffer[rb_len-4],2);
+
+		if( crc16calc(commandAPayload,rb_len -4 ) == (crc[0]<<8 | crc[1])){
 			// ProceduresMsg(protocolo.msg);
 		}
 		else{
-			char NAKMSG[] = {0x15,protocolo.msg[1],0x0A};
+			char NAKMSG[] = {NACK,commandAPayload[1],0x0A};
 			SendMsg(NAKMSG,3);
-	}
-	k_free(protocolo.msg);
+		}
     }
 }
 
@@ -154,12 +155,9 @@ void configureUSB(){
  * @param len, recebe o tamanho dos dados em bytes.
  */
 void SendMsg(char*msg1,int len){
-	  char *msg3 = k_malloc(sizeof(char)*(len + 4));
+	  char msg3[128];
 	  EncapsulationMsgs(msg1,msg3,len);
-	//   HAL_UART_Transmit(&huart1, msg3, (len + 4), 100);
-	  uart_fifo_fill(uart_dev, msg3, len);
-	  k_free(msg3);
-
+	  uart_fifo_fill(uart_dev, msg3, len + 4);
 }
 
 
@@ -197,7 +195,7 @@ void SendMsg(char*msg1,int len){
 void ProceduresMsg(char *data) {
 	char NAKMSG[] = { 0x15, data[1], data[1] };
 	switch (data[0]) {
-	case 0x30:
+	case 0x20:
 		for (uint8_t f = 0; f < 10; f++) {
 			if (data[1] == idCMD[f]) {
 				FUNC[f](data);
@@ -206,18 +204,16 @@ void ProceduresMsg(char *data) {
 		}
 		break;
 	case 0x15:
-		if (bufferSendProtocol != NULL)
-			ProceduresMsg(bufferSendProtocol);
+		if (lenBufferACK != 0)
+			ProceduresMsg(bufferACK);
 		break;
 	case 0x06:
-		if (bufferSendProtocol != NULL){
-			k_free(bufferSendProtocol);
-			bufferSendProtocol = NULL;
-		}
+		lenBufferACK = 0;
 		break;
 	case 0x40:
-		SendMsg(bufferSendProtocol, 5);
-		break;
+		if (lenBufferACK != 0)
+			SendMsg(bufferACK,lenBufferACK);
+		break; 
 	default:
 		SendMsg(NAKMSG, 3);
 	}
@@ -227,7 +223,6 @@ void ProceduresMsg(char *data) {
 void CMD1(char *data){
 	char MSG[] = {0x40,data[1],data[2]};
 	SendMsg(MSG,3);
-	if (bufferSendProtocol != NULL)k_free(bufferSendProtocol);
-	bufferSendProtocol = (uint8_t *)k_calloc(1,sizeof(MSG));
-	memcpy(bufferSendProtocol,MSG,sizeof(MSG));
+    lenBufferACK = sizeof(MSG);
+	memcpy(bufferACK,MSG,sizeof(MSG));
 }

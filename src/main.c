@@ -20,11 +20,11 @@ void main(void)
 	configureUSB();
 	while(1){
 		if(flagMsgRx){
-			// ReadMsg();
+	// 		// ReadMsg();
 			uint8_t buffer[3] = "OK\n";
 			/*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, 3);
 			flagMsgRx = 0;
 		}
-		k_sleep(K_MSEC(100));
+		// k_sleep(K_MSEC(100));
 	}
 }

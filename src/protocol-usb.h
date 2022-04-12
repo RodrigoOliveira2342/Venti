@@ -19,13 +19,6 @@
 #define NACK   0x15
 #define ACK    0x06
 
-#define PZERO {0x00,{0x00}}
-
-typedef struct{
-	char *msg;
-	uint8_t crc[2];
-}Protocolo_t;
-
 extern const struct device *uart_dev;
 extern uint8_t flagMsgRx;
 
