@@ -5,7 +5,7 @@ uint8_t ring_buffer[RING_BUF_SIZE];
 
 static uint8_t idCMD[6]={0x75,0x76,0x77,0x78,0x79,0x7B};
 
-static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD1,CMD1,CMD1};
+static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD4,CMD5,CMD6};
 uint8_t flagMsgRx= 0;
 
 char bufferACK[128];
@@ -112,6 +112,7 @@ void ReadMsg(){
 		else{
 			char NAKMSG[] = {NACK,commandAPayload[1],0x0A};
 			SendMsg(NAKMSG,3);
+			lenBufferACK = 0;
 		}
     }
 }
@@ -225,6 +226,7 @@ void ProceduresMsg(char *data) {
 		break; 
 	default:
 		SendMsg(NAKMSG, 3);
+		lenBufferACK = 0;
 	}
 }
 
@@ -235,14 +237,40 @@ void CMD1(char *data){
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
+
 void CMD2(char *data){
 	char MSG[] = {0x50,data[1],data[2]};
 	SendMsg(MSG,3);
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
+
 void CMD3(char *data){
 	char MSG[] = {0x60,data[1],data[2]};
+	SendMsg(MSG,3);
+    lenBufferACK = sizeof(MSG);
+	memcpy(bufferACK,MSG,sizeof(MSG));
+}
+
+// Zerar os transdutores
+void CMD4(char *data){
+	char MSG[] = {0x65,data[1],data[2]};
+	SendMsg(MSG,3);
+    lenBufferACK = sizeof(MSG);
+	memcpy(bufferACK,MSG,sizeof(MSG));
+
+}
+
+
+void CMD5(char *data){
+	char MSG[] = {0x70,data[1],data[2]};
+	SendMsg(MSG,3);
+    lenBufferACK = sizeof(MSG);
+	memcpy(bufferACK,MSG,sizeof(MSG));
+}
+
+void CMD6(char *data){
+	char MSG[] = {0x80,data[1],data[2]};
 	SendMsg(MSG,3);
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));

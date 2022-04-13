@@ -3411,9 +3411,9 @@
 #define DT_N_S_soc_S_i2c_40003000_P_interrupts_FOREACH_PROP_ELEM_VARGS(fn, ...) fn(DT_N_S_soc_S_i2c_40003000, interrupts, 0, __VA_ARGS__) \
 	fn(DT_N_S_soc_S_i2c_40003000, interrupts, 1, __VA_ARGS__)
 #define DT_N_S_soc_S_i2c_40003000_P_interrupts_EXISTS 1
-#define DT_N_S_soc_S_i2c_40003000_P_sda_pin 16
+#define DT_N_S_soc_S_i2c_40003000_P_sda_pin 30
 #define DT_N_S_soc_S_i2c_40003000_P_sda_pin_EXISTS 1
-#define DT_N_S_soc_S_i2c_40003000_P_scl_pin 24
+#define DT_N_S_soc_S_i2c_40003000_P_scl_pin 4
 #define DT_N_S_soc_S_i2c_40003000_P_scl_pin_EXISTS 1
 #define DT_N_S_soc_S_i2c_40003000_P_clock_frequency 400000
 #define DT_N_S_soc_S_i2c_40003000_P_clock_frequency_EXISTS 1

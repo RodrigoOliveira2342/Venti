@@ -83,6 +83,7 @@ C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/debug/CMakeFiles/edi
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/debug/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/logging/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/logging/CMakeFiles/rebuild_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fs/CMakeFiles/subsys__fs.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fs/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fs/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/ipc/CMakeFiles/edit_cache.dir
@@ -97,6 +98,8 @@ C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/random/CMakeFiles/ed
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/random/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/storage/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/storage/CMakeFiles/rebuild_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/storage/flash_map/CMakeFiles/edit_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/storage/flash_map/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fb/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/fb/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/subsys/portability/CMakeFiles/edit_cache.dir
@@ -145,6 +148,9 @@ C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/gpio/CMakeFiles/reb
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/CMakeFiles/drivers__hwinfo.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/CMakeFiles/rebuild_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/flash/CMakeFiles/edit_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/flash/CMakeFiles/drivers__flash.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/flash/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/serial/CMakeFiles/drivers__serial.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/serial/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/serial/CMakeFiles/rebuild_cache.dir
@@ -161,7 +167,6 @@ C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/bin/CMakeFiles/edi
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/bin/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/flash_patch/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/flash_patch/CMakeFiles/rebuild_cache.dir
-C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/fatal_error/CMakeFiles/..__nrf__lib__fatal_error.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/fatal_error/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/lib/fatal_error/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/nrf/samples/CMakeFiles/edit_cache.dir
@@ -231,6 +236,7 @@ C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/st/CMakeFiles/rebuild_cach
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/libmetal/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/libmetal/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/littlefs/CMakeFiles/edit_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/littlefs/CMakeFiles/..__modules__fs__littlefs.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/littlefs/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/loramac-node/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/modules/loramac-node/CMakeFiles/rebuild_cache.dir

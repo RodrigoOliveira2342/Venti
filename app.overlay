@@ -10,3 +10,9 @@
 		label = "CDC_ACM_0";
 	};
 };
+
+&i2c0 {
+	sda-pin = <30>;
+	scl-pin = <4>;
+};
+

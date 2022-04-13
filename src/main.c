@@ -14,21 +14,18 @@
 
 #include <zephyr.h>
 #include  "protocol-usb.h"
+#include  "tablesFS.h"
 
 void main(void)
 {
 	configureUSB();
+	uint32_t lFSC = configureLFS();
+	uint8_t lFSCV[4];
+	memcpy(lFSCV,&lFSC,4); 
+	SendMsg(lFSCV,4);
 	while(1){
 		if(uart_irq_rx_ready(uart_dev)){
-			// int recv_len, rb_len;
-			// uint8_t buffer[64];
 			ReadMsg();
-			// uint8_t buffer[3] = "OK\n";
-			// size_t len = MIN(ring_buf_space_get(&ringbuf),
-			// 		 sizeof(buffer));
-			// recv_len = uart_fifo_read(uart_dev, buffer, len);
-			// /*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, recv_len);
-			// flagMsgRx = 0;
 		}
 		k_sleep(K_MSEC(100));
 	}

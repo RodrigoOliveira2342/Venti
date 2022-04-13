@@ -98,8 +98,8 @@
 			status = "okay";
 			label = "I2C_0";
 			compatible = "nordic,nrf-twi";
-			sda-pin = < 0x10 >;
-			scl-pin = < 0x18 >;
+			sda-pin = < 0x1e >;
+			scl-pin = < 0x4 >;
 		};
 		spi0: spi@40003000 {
 			#address-cells = < 0x1 >;
