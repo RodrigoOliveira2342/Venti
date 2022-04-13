@@ -5,7 +5,7 @@ uint8_t ring_buffer[RING_BUF_SIZE];
 
 static uint8_t idCMD[6]={0x75,0x76,0x77,0x78,0x79,0x7B};
 
-static StatesCMD *FUNC[6]={CMD1,CMD1,CMD1,CMD1,CMD1,CMD1};
+static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD1,CMD1,CMD1};
 uint8_t flagMsgRx= 0;
 
 char bufferACK[128];
@@ -41,40 +41,41 @@ static void interrupt_handler(const struct device *dev, void *user_data)
 	ARG_UNUSED(user_data);
 	
 	while (uart_irq_update(dev) && uart_irq_is_pending(dev)) {
-		if (uart_irq_rx_ready(dev)) {
-			int recv_len, rb_len;
-			uint8_t buffer[64];
+		// if (uart_irq_rx_ready(dev)) {
+		// 	int recv_len, rb_len;
+		// 	uint8_t buffer[64];
 
-			size_t len = MIN(ring_buf_space_get(&ringbuf),
-					 sizeof(buffer));
+		// 	size_t len = MIN(ring_buf_space_get(&ringbuf),
+		// 			 sizeof(buffer));
 
-			recv_len = uart_fifo_read(dev, buffer, len);
-			if (recv_len < 0/*Substituir pelo menor valor do protocolo*/) {
-				recv_len = 0;
-			};
+			// recv_len = uart_fifo_read(dev, buffer, len);
+		// 	if (recv_len < 0/*Substituir pelo menor valor do protocolo*/) {
+		// 		recv_len = 0;
+		// 	};
 
-			rb_len = ring_buf_put(&ringbuf, buffer, recv_len);
-			// if (rb_len < recv_len ) {
-			// }
+			// rb_len = ring_buf_put(&ringbuf, buffer, recv_len);
+		// 	// if (rb_len < recv_len ) {
+		// 	// }
 
-			if (rb_len) {
-				uart_irq_tx_enable(dev);
-			}
+		// 	if (rb_len) {
+		// 		uart_irq_tx_enable(dev);
+		// 	}
 
-		}
-
-		flagMsgRx = 1;
-		// if (uart_irq_tx_ready(dev)) {
-			// flagMsgRx = 1;
-			uint8_t buffer2[64];
-			int rb_len;//, send_len;
-			rb_len = ring_buf_get(&ringbuf, buffer2, sizeof(buffer2));
-			// uart_fifo_fill(dev, buffer2, rb_len);
-			// SendMsg(buffer2, rb_len);
 		// }
-        // //  ReadMsg();   
-		// }
+
+		// flagMsgRx = 1;
+		// // if (uart_irq_tx_ready(dev)) {
+		// 	// flagMsgRx = 1;
+		// 	uint8_t buffer2[64];
+		// 	int rb_len;//, send_len;
+		// 	rb_len = ring_buf_get(&ringbuf, buffer2, sizeof(buffer2));
+		// 	// uart_fifo_fill(dev, buffer2, rb_len);
+		// 	// SendMsg(buffer2, rb_len);
+		// // }
+        // // //  ReadMsg();   
+		// // }
 	}
+	flagMsgRx = 1;
 }
 
 
@@ -91,15 +92,22 @@ void ReadMsg(){
 	uint8_t commandAPayload[16];
 	uint8_t crc[2];
 	int rb_len;
-	rb_len = ring_buf_get(&ringbuf, buffer, sizeof(buffer));
+
+	size_t len = MIN(ring_buf_space_get(&ringbuf),
+					 sizeof(buffer));
+
+	rb_len = uart_fifo_read(uart_dev, buffer, len);
+	
+	// /*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, rb_len);
 
 	if(buffer[0]== 0x7E && buffer[rb_len-1] == 0xFF && rb_len >6){
 
 		memcpy(commandAPayload,&buffer[1],rb_len -4);
-		memcpy(crc,&buffer[rb_len-4],2);
+		memcpy(crc,&buffer[rb_len-3],2);
 
 		if( crc16calc(commandAPayload,rb_len -4 ) == (crc[0]<<8 | crc[1])){
-			// ProceduresMsg(protocolo.msg);
+			ProceduresMsg(commandAPayload);
+			// /*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, rb_len);
 		}
 		else{
 			char NAKMSG[] = {NACK,commandAPayload[1],0x0A};
@@ -140,9 +148,10 @@ void configureUSB(){
 	k_busy_wait(1000000);
 
 	ret = uart_line_ctrl_get(dev, UART_LINE_CTRL_BAUD_RATE, &baudrate);
-	uart_irq_callback_set(dev, interrupt_handler);
+	// uart_irq_callback_set(dev, interrupt_handler); // MOD
 	/* Enable rx interrupts */
 	uart_irq_rx_enable(dev);
+	uart_irq_tx_enable(dev); // MOD
 }
 
 
@@ -196,7 +205,7 @@ void ProceduresMsg(char *data) {
 	char NAKMSG[] = { 0x15, data[1], data[1] };
 	switch (data[0]) {
 	case 0x20:
-		for (uint8_t f = 0; f < 10; f++) {
+		for (uint8_t f = 0; f < 5; f++) {
 			if (data[1] == idCMD[f]) {
 				FUNC[f](data);
 				break;
@@ -222,6 +231,18 @@ void ProceduresMsg(char *data) {
 //testes
 void CMD1(char *data){
 	char MSG[] = {0x40,data[1],data[2]};
+	SendMsg(MSG,3);
+    lenBufferACK = sizeof(MSG);
+	memcpy(bufferACK,MSG,sizeof(MSG));
+}
+void CMD2(char *data){
+	char MSG[] = {0x50,data[1],data[2]};
+	SendMsg(MSG,3);
+    lenBufferACK = sizeof(MSG);
+	memcpy(bufferACK,MSG,sizeof(MSG));
+}
+void CMD3(char *data){
+	char MSG[] = {0x60,data[1],data[2]};
 	SendMsg(MSG,3);
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));

@@ -22,6 +22,9 @@
 extern const struct device *uart_dev;
 extern uint8_t flagMsgRx;
 
+extern struct ring_buf ringbuf;
+extern uint8_t ring_buffer[RING_BUF_SIZE];
+
 typedef void StatesCMD(char * Dados);
 
 

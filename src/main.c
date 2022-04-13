@@ -19,12 +19,17 @@ void main(void)
 {
 	configureUSB();
 	while(1){
-		if(flagMsgRx){
-	// 		// ReadMsg();
-			uint8_t buffer[3] = "OK\n";
-			/*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, 3);
-			flagMsgRx = 0;
+		if(uart_irq_rx_ready(uart_dev)){
+			// int recv_len, rb_len;
+			// uint8_t buffer[64];
+			ReadMsg();
+			// uint8_t buffer[3] = "OK\n";
+			// size_t len = MIN(ring_buf_space_get(&ringbuf),
+			// 		 sizeof(buffer));
+			// recv_len = uart_fifo_read(uart_dev, buffer, len);
+			// /*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, recv_len);
+			// flagMsgRx = 0;
 		}
-		// k_sleep(K_MSEC(100));
+		k_sleep(K_MSEC(100));
 	}
 }
