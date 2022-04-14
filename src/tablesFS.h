@@ -9,11 +9,17 @@
 
 #include <string.h>
 
+#define  FLPS  0x00
+#define  FHSC  0x01
+#define  FSDP  0x02
+#define  FFIO2 0x03 
 
-    const std::string OXIGENIO  = "OXIGENIO";
+void configureLFS(void);
 
-    const std::string LPS = "LPS_";
-    const std::string HSC = "HSC_";
-    const std::string SDP = "SDP_";
-    const std::string PTS = "PTS_";
+uint32_t testcount(void);
+
+
+void readdata(int tipo);
+void savedata(int tipo);
+
 

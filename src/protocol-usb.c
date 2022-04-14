@@ -36,49 +36,6 @@ const struct device *uart_dev ;
 
  }
 
-static void interrupt_handler(const struct device *dev, void *user_data)
-{
-	ARG_UNUSED(user_data);
-	
-	while (uart_irq_update(dev) && uart_irq_is_pending(dev)) {
-		// if (uart_irq_rx_ready(dev)) {
-		// 	int recv_len, rb_len;
-		// 	uint8_t buffer[64];
-
-		// 	size_t len = MIN(ring_buf_space_get(&ringbuf),
-		// 			 sizeof(buffer));
-
-			// recv_len = uart_fifo_read(dev, buffer, len);
-		// 	if (recv_len < 0/*Substituir pelo menor valor do protocolo*/) {
-		// 		recv_len = 0;
-		// 	};
-
-			// rb_len = ring_buf_put(&ringbuf, buffer, recv_len);
-		// 	// if (rb_len < recv_len ) {
-		// 	// }
-
-		// 	if (rb_len) {
-		// 		uart_irq_tx_enable(dev);
-		// 	}
-
-		// }
-
-		// flagMsgRx = 1;
-		// // if (uart_irq_tx_ready(dev)) {
-		// 	// flagMsgRx = 1;
-		// 	uint8_t buffer2[64];
-		// 	int rb_len;//, send_len;
-		// 	rb_len = ring_buf_get(&ringbuf, buffer2, sizeof(buffer2));
-		// 	// uart_fifo_fill(dev, buffer2, rb_len);
-		// 	// SendMsg(buffer2, rb_len);
-		// // }
-        // // //  ReadMsg();   
-		// // }
-	}
-	flagMsgRx = 1;
-}
-
-
 /**
  * @brief ReadMsg
  * 		Esta função ler e processa protocolos recebidos via UART.
@@ -97,8 +54,6 @@ void ReadMsg(){
 					 sizeof(buffer));
 
 	rb_len = uart_fifo_read(uart_dev, buffer, len);
-	
-	// /*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, rb_len);
 
 	if(buffer[0]== 0x7E && buffer[rb_len-1] == 0xFF && rb_len >6){
 
@@ -107,7 +62,6 @@ void ReadMsg(){
 
 		if( crc16calc(commandAPayload,rb_len -4 ) == (crc[0]<<8 | crc[1])){
 			ProceduresMsg(commandAPayload);
-			// /*ECO PARA TESTES*/ uart_fifo_fill(uart_dev, buffer, rb_len);
 		}
 		else{
 			char NAKMSG[] = {NACK,commandAPayload[1],0x0A};

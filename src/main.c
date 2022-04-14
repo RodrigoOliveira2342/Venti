@@ -19,8 +19,11 @@
 void main(void)
 {
 	configureUSB();
-	uint32_t lFSC = configureLFS();
+	configureLFS();
+
+	uint32_t lFSC =  cFSTEST();
 	uint8_t lFSCV[4];
+	
 	memcpy(lFSCV,&lFSC,4); 
 	SendMsg(lFSCV,4);
 	while(1){
