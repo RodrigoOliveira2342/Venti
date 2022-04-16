@@ -32,6 +32,8 @@ char fnameHSC[MAX_PATH_LEN];
 char fnameSDP[MAX_PATH_LEN];
 char fnameFIO2[MAX_PATH_LEN];
 
+int flagfiles[4]={0,0,0,0};
+
 struct fs_file_t fLPS;
 struct fs_file_t fHSC;
 struct fs_file_t fSDP;
@@ -39,7 +41,10 @@ struct fs_file_t fFIO2;
 
 struct fs_dirent dirent;
 
-
+float tabela_HSC[43]={0}; 
+float tabela_SPD[43]={0}; 
+float tabela_FIO2[2]={0};
+float offset_LPS[1] = {0};
 
 void configureLFS(void)
 {
@@ -87,13 +92,112 @@ void configureLFS(void)
 
 	fs_file_t_init(&fLPS);
 
-	rc = fs_stat(fnameLPS, &dirent);
+	flagfiles[0] = fs_stat(fnameLPS, &dirent);
 
 	fs_file_t_init(&fHSC);
 
-	rc = fs_stat(fnameLPS, &dirent);
+	flagfiles[1] = fs_stat(fnameHSC, &dirent);
 
 }
+
+void savedata(int tipo){
+
+	struct fs_file_t *file;
+	char *fname;
+	int len = 0;
+	float *data;
+	int rc;
+	
+	switch(tipo){
+		case 0:
+			file = &fLPS;
+			fname = fnameLPS;
+			len = 1;
+			data =  offset_LPS;
+			break;
+		case 1:
+			file = &fHSC;
+			fname = fnameHSC;
+			len = 43;
+			data = tabela_HSC;
+			break;
+		case 2:
+			file = &fSDP;
+			fname = fnameSDP;
+			len = 43;
+			data = tabela_SPD;
+			break;
+		case 3:
+			file = &fFIO2;
+			fname = fnameFIO2;
+			len = 2;
+			data = tabela_FIO2;
+			break;
+		default:
+			return;
+	}
+	rc = fs_open(file, fname, FS_O_CREATE | FS_O_RDWR);
+	for(int i=0;i<len;i++){
+			rc = fs_write(file, &data[i], sizeof(float));
+		}
+	rc = fs_seek(file, 0, FS_SEEK_SET);
+	rc = fs_close(file);
+
+
+}	
+
+void readdata(int tipo){
+	struct fs_file_t *file;
+	char *fname;
+	int len = 0;
+	float *data;
+	int rc;
+	switch(tipo){
+		case 0:
+			file = &fLPS;
+			fname = fnameLPS;
+			len = 1;
+			data =  offset_LPS;
+			break;
+		case 1:
+			file = &fHSC;
+			fname = fnameHSC;
+			len = 43;
+			data = tabela_HSC;
+			break;
+		case 2:
+			file = &fSDP;
+			fname = fnameSDP;
+			len = 43;
+			data = tabela_SPD;
+			break;
+		case 3:
+			file = &fFIO2;
+			fname = fnameFIO2;
+			len = 2;
+			data = tabela_FIO2;
+			break;
+		default:
+			return;
+	}
+
+	rc = fs_open(file, fname, FS_O_CREATE | FS_O_RDWR);
+
+	if (rc >= 0) {
+		for(int i=0;i<len;i++){
+			rc = fs_read(file, &data[i], sizeof(float));
+		}
+	}else{
+		for(int i=0;i<len;i++){
+			rc = fs_write(file, &data[i], sizeof(float));
+		}
+	}
+	
+	rc = fs_seek(file, 0, FS_SEEK_SET);
+	rc = fs_close(file);
+
+}
+
 
 
 uint32_t cFSTEST(){
@@ -101,7 +205,7 @@ uint32_t cFSTEST(){
 	uint32_t boot_count = 0;
 
 	if (rc >= 0) {
-		rc = fs_read(&fLPS, &boot_count, sizeof(boot_count));
+		rc = fs_read(&fLPS, fnameLPS, sizeof(boot_count));
 		rc = fs_seek(&fLPS, 0, FS_SEEK_SET);
 	}
 	boot_count += 1;
@@ -124,6 +228,18 @@ uint32_t cFSTEST(){
 	//END MOD
 	return  boot_count2;
 
+}
+
+
+uint32_t cFSTEST2(){
+		readdata(0);
+		offset_LPS[0]++;
+		savedata(0);
+
+		readdata(1);
+		tabela_HSC[1]+=1.5;
+		savedata(1);
+		return  (int)(tabela_HSC[1]*1);
 }
 
 

@@ -21,11 +21,12 @@ void main(void)
 	configureUSB();
 	configureLFS();
 
-	uint32_t lFSC =  cFSTEST();
+	uint32_t lFSC =  cFSTEST2();
 	uint8_t lFSCV[4];
 	
 	memcpy(lFSCV,&lFSC,4); 
 	SendMsg(lFSCV,4);
+	
 	while(1){
 		if(uart_irq_rx_ready(uart_dev)){
 			ReadMsg();
