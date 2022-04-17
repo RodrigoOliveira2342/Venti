@@ -42,11 +42,11 @@ struct fs_file_t fFIO2;
 struct fs_dirent dirent;
 
 float tabela_HSC[43]={0}; 
-float tabela_SPD[43]={0}; 
+float tabela_SDP[43]={0}; 
 float tabela_FIO2[2]={0};
 float offset_LPS[1] = {0};
 
-void configureLFS(void)
+void ConfigureLFS(void)
 {
 	struct fs_mount_t *mp =
 #if DT_NODE_EXISTS(PARTITION_NODE)
@@ -61,8 +61,10 @@ void configureLFS(void)
 	const struct flash_area *pfa;
 	int rc;
 
-	snprintf(fnameLPS, sizeof(fnameLPS), "%s/boot_count", mp->mnt_point);
-	snprintf(fnameHSC, sizeof(fnameHSC), "%s/boot_count2", mp->mnt_point);
+	snprintf(fnameLPS, sizeof(fnameLPS), "%s/offsetLPS", mp->mnt_point);
+	snprintf(fnameHSC, sizeof(fnameHSC), "%s/tableHSC", mp->mnt_point);
+	snprintf(fnameSDP, sizeof(fnameSDP), "%s/tableSDP", mp->mnt_point);
+	snprintf(fnameFIO2, sizeof(fnameFIO2), "%s/tableFIO2", mp->mnt_point);
 
 	rc = flash_area_open(id, &pfa);
 	if (rc < 0)return;
@@ -97,10 +99,19 @@ void configureLFS(void)
 	fs_file_t_init(&fHSC);
 
 	flagfiles[1] = fs_stat(fnameHSC, &dirent);
+	
+	fs_file_t_init(&fSDP);
+
+	flagfiles[2] = fs_stat(fnameSDP, &dirent);
+	
+	
+	fs_file_t_init(&fFIO2);
+
+	flagfiles[3] = fs_stat(fnameFIO2, &dirent);
 
 }
 
-void savedata(int tipo){
+void Savedata(int tipo){
 
 	struct fs_file_t *file;
 	char *fname;
@@ -125,7 +136,7 @@ void savedata(int tipo){
 			file = &fSDP;
 			fname = fnameSDP;
 			len = 43;
-			data = tabela_SPD;
+			data = tabela_SDP;
 			break;
 		case 3:
 			file = &fFIO2;
@@ -146,7 +157,7 @@ void savedata(int tipo){
 
 }	
 
-void readdata(int tipo){
+void Readdata(int tipo){
 	struct fs_file_t *file;
 	char *fname;
 	int len = 0;
@@ -169,7 +180,7 @@ void readdata(int tipo){
 			file = &fSDP;
 			fname = fnameSDP;
 			len = 43;
-			data = tabela_SPD;
+			data = tabela_SDP;
 			break;
 		case 3:
 			file = &fFIO2;
@@ -199,48 +210,23 @@ void readdata(int tipo){
 }
 
 
+// uint32_t CFSTEST2(){
+	
+// 	// uint32_t lFSC =  CFSTEST2();
+// 	// uint8_t lFSCV[4];
+	
+// 	// memcpy(lFSCV,&lFSC,4); 
+// 	// SendMsg(lFSCV,4);
 
-uint32_t cFSTEST(){
-	int rc;
-	uint32_t boot_count = 0;
+// 		readdata(0);
+// 		offset_LPS[0]++;
+// 		savedata(0);
 
-	if (rc >= 0) {
-		rc = fs_read(&fLPS, fnameLPS, sizeof(boot_count));
-		rc = fs_seek(&fLPS, 0, FS_SEEK_SET);
-	}
-	boot_count += 1;
-	rc = fs_write(&fLPS, &boot_count, sizeof(boot_count));
-	rc = fs_close(&fLPS);
-
-	//BEGIN MOD
-
-	rc = fs_open(&fHSC, fnameHSC, FS_O_CREATE | FS_O_RDWR);
-
-	uint32_t boot_count2 = 0;
-	if (rc >= 0) {
-		rc = fs_read(&fHSC, &boot_count2, sizeof(boot_count2));
-		rc = fs_seek(&fHSC, 0, FS_SEEK_SET);
-	}
-	boot_count2 += 2;
-	rc = fs_write(&fHSC, &boot_count2, sizeof(boot_count2));
-	rc = fs_close(&fHSC);
-
-	//END MOD
-	return  boot_count2;
-
-}
-
-
-uint32_t cFSTEST2(){
-		readdata(0);
-		offset_LPS[0]++;
-		savedata(0);
-
-		readdata(1);
-		tabela_HSC[1]+=1.5;
-		savedata(1);
-		return  (int)(tabela_HSC[1]*1);
-}
+// 		readdata(2);
+// 		tabela_SDP[1]+=1.5;
+// 		savedata(2);
+// 		return  (int)(tabela_SDP[1]*10);
+// }
 
 
 

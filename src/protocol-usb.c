@@ -72,7 +72,7 @@ void ReadMsg(){
 }
 
 
-void configureUSB(){
+void ConfigureUSB(){
     const struct device *dev;
 	dev = DEVICE_DT_GET_ONE(zephyr_cdc_acm_uart);
 	uart_dev = dev;

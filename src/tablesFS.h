@@ -14,12 +14,9 @@
 #define  FSDP  0x02
 #define  FFIO2 0x03 
 
-void configureLFS(void);
+void ConfigureLFS(void);
 
-uint32_t testcount(void);
-
-
-void readdata(int tipo);
-void savedata(int tipo);
+void Readdata(int tipo);
+void Savedata(int tipo);
 
 

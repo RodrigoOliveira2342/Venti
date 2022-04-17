@@ -37,7 +37,7 @@ void CMD6(char * data); // Leitura da tabela de calibração atualizada
 
 
 uint16_t crc16calc(char* pData, int length);
-void configureUSB();
+void ConfigureUSB();
 void ReadMsg();
 void EncapsulationMsgs(char *data1,char *data2,int len);
 void SendMsg(char*msg1,int len);
