@@ -79,6 +79,11 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
+  include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/i2c/cmake_install.cmake")
+endif()
+
+if(NOT CMAKE_INSTALL_LOCAL_ONLY)
+  # Include the install script for the subdirectory.
   include("C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/cmake_install.cmake")
 endif()
 

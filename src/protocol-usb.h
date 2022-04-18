@@ -12,12 +12,19 @@
 
 #include <kernel.h>
 
+
+#include  "tablesFS.h"
+#include  "sensor_controller.h"
+
+
 #define RING_BUF_SIZE 1024
 
 #define HEADER 0x76
 #define FOOTER 0xFF
 #define NACK   0x15
 #define ACK    0x06
+
+#define abs(x) ((x)>0?(x):-(x))
 
 extern const struct device *uart_dev;
 extern uint8_t flagMsgRx;
@@ -38,6 +45,7 @@ void CMD6(char * data); // Leitura da tabela de calibração atualizada
 
 uint16_t crc16calc(char* pData, int length);
 void ConfigureUSB();
+void ConfigureSDP();
 void ReadMsg();
 void EncapsulationMsgs(char *data1,char *data2,int len);
 void SendMsg(char*msg1,int len);

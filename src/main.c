@@ -14,17 +14,14 @@
 
 #include <zephyr.h>
 #include  "protocol-usb.h"
-#include  "tablesFS.h"
-
 void main(void)
 {
-	configureUSB();
-	configureLFS();
+	ConfigureUSB();
+	ConfigureLFS();
+	ConfigureSDP();
 
-	uint32_t lFSC =  cFSTEST2();
 	uint8_t lFSCV[4];
-	
-	memcpy(lFSCV,&lFSC,4); 
+	memcpy(lFSCV,&escalaBufferSDP,4); 
 	SendMsg(lFSCV,4);
 	
 	while(1){

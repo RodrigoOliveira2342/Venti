@@ -145,6 +145,9 @@ C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/console/CMakeFiles/
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/gpio/CMakeFiles/drivers__gpio.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/gpio/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/gpio/CMakeFiles/rebuild_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/i2c/CMakeFiles/drivers__i2c.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/i2c/CMakeFiles/edit_cache.dir
+C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/i2c/CMakeFiles/rebuild_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/CMakeFiles/drivers__hwinfo.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/CMakeFiles/edit_cache.dir
 C:/Users/LAPADA/Documents/NRF-T01/Venti/build/zephyr/drivers/hwinfo/CMakeFiles/rebuild_cache.dir

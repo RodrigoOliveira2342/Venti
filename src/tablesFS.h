@@ -14,6 +14,11 @@
 #define  FSDP  0x02
 #define  FFIO2 0x03 
 
+extern float tabela_HSC[43]; 
+extern float tabela_SDP[43];
+extern float tabela_FIO2[2];
+extern float offset_LPS[1];
+
 void ConfigureLFS(void);
 
 void Readdata(int tipo);

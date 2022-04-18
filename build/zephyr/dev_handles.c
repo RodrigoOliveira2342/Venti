@@ -43,3 +43,10 @@ __devicehdl_DT_N_S_soc_S_gpio_50000300[] = { DEVICE_HANDLE_ENDS, DEVICE_HANDLE_E
  */
 const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
 __devicehdl_DT_N_S_soc_S_flash_controller_4001e000[] = { DEVICE_HANDLE_ENDS, DEVICE_HANDLE_ENDS, DEVICE_HANDLE_ENDS };
+
+/* 8 : /soc/i2c@40003000:
+ * - (/soc)
+ * - (/soc/interrupt-controller@e000e100)
+ */
+const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
+__devicehdl_DT_N_S_soc_S_i2c_40003000[] = { DEVICE_HANDLE_ENDS, DEVICE_HANDLE_ENDS, DEVICE_HANDLE_ENDS, DEVICE_HANDLE_ENDS };
