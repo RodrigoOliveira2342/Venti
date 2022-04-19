@@ -3,12 +3,12 @@
 struct ring_buf ringbuf;
 uint8_t ring_buffer[RING_BUF_SIZE];
 
-static uint8_t idCMD[6]={0x75,0x76,0x77,0x78,0x79,0x7B};
+static uint8_t idCMD[6]={0x75,0x77,0x78,0x79,0x7B};
 
-static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD4,CMD5,CMD6};
+static StatesCMD *FUNC[6]={CMD1,CMD2,CMD3,CMD4,CMD5};
 uint8_t flagMsgRx= 0;
 
-char bufferACK[128];
+char bufferACK[131];
 uint8_t lenBufferACK = 0;
 
 const struct device *i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
@@ -146,7 +146,7 @@ void ConfigureUSB(){
  * @param len, recebe o tamanho dos dados em bytes.
  */
 void SendMsg(char*msg1,int len){
-	  char msg3[128];
+	  char msg3[135];
 	  EncapsulationMsgs(msg1,msg3,len);
 	  uart_fifo_fill(uart_dev, msg3, len + 4);
 }
@@ -187,7 +187,7 @@ void ProceduresMsg(char *data) {
 	char NAKMSG[] = { 0x15, data[1], data[1] };
 	switch (data[0]) {
 	case 0x20:
-		for (uint8_t f = 0; f < 5; f++) {
+		for (uint8_t f = 0; f < 6; f++) {
 			if (data[1] == idCMD[f]) {
 				FUNC[f](data);
 				break;
@@ -213,34 +213,33 @@ void ProceduresMsg(char *data) {
 
 //testes
 void CMD1(char *data){
-	char MSG[] = {0x40,data[1],data[2]};
+	char MSG[] = {ACK,data[1],data[2]};
 	SendMsg(MSG,3);
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
 
 void CMD2(char *data){
-	char MSG[] = {0x50,data[1],data[2]};
+	char MSG[] = {ACK,data[1],data[2]};
 	SendMsg(MSG,3);
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
 
-void CMD3(char *data){
-	char MSG[] = {0x60,data[1],data[2]};
-	SendMsg(MSG,3);
-    lenBufferACK = sizeof(MSG);
-	memcpy(bufferACK,MSG,sizeof(MSG));
-}
 
 // Zerar os transdutores
-void CMD4(char *data){
+void CMD3(char *data){
         char MSG[] = {ACK, data[1], data[2],0,0};
+		// char MSG[] = {ACK, data[1], data[2],0,0,0,0};
         // uint8_t bufferLPS[3]={0};
-		// uint8_t bufferSDP[3]={0};
+		uint8_t bufferSDP[3]={0};
 		uint8_t bufferHSC[2]={0};
-		// signed short calc_press;
-		// int escalaBufferSDP = -1;
+		signed short calc_press;
+
+		tabela_HSC[0]=0;
+		tabela_SDP[0]=0;
+		offset_LPS[0]=0;
+
 		int k = 0;
 
         if(data[2] == 0x12){
@@ -256,40 +255,44 @@ void CMD4(char *data){
 			// offset_LPS[0] = offset_LPS[0]/20.0;
 
 			// Savedata(0);
-		
+
+			// char aux2[2];
+			// int aux4;
             for(k = 0;k<32;k++){
 
-                // ReadSensorI2C(bufferSDP, ADDRESS_SDP31 ,3);
-				// k_usleep(500);
-				// calc_press = ((bufferSDP[0]<<8 | bufferSDP[1]));
-               	// tabela_SDP[0]  += calc_press/((escalaBufferSDP) * 100.0);
+                ReadSensorI2C(bufferSDP, ADDRESS_SDP31 ,3);
+				k_usleep(500);
+				calc_press = ((bufferSDP[0]<<8 | bufferSDP[1]));
+               	tabela_SDP[0]  += calc_press/((escalaBufferSDP) * 100.0);
+				// aux4= (calc_press/((escalaBufferSDP) * 100.0))*1000/1;
+
+				// aux4= abs(aux4);
+				// aux2[0]= aux4>>8;
+				// aux2[1]= aux4 & 0x00FF;
+				// SendMsg(aux2,2);
 
             	ReadSensorI2C(bufferHSC, ADDRESS_HSC ,2);
 				k_usleep(500);
-                tabela_HSC[0] = ((((bufferHSC[0] & 0x3F)<<8 | bufferHSC[1])-0x0666)*(12.4541-(-12.4541))/(0x3999-0x0666) -12.4541);
-            }
+                tabela_HSC[0] += ((((bufferHSC[0] & 0x3F)<<8 | bufferHSC[1])-0x0666)*(12.4541-(-12.4541))/(0x3999-0x0666) -12.4541);
+				// aux4 =  (((((bufferHSC[0] & 0x3F)<<8 | bufferHSC[1])-0x0666)*(12.4541-(-12.4541))/(0x3999-0x0666) -12.4541))*1000/1;
+				
+				// aux4= abs(aux4);
+				// aux2[0]= aux4>>8;
+				// aux2[1]= aux4 & 0x00FF;
+				// SendMsg(aux2,2);
+			
+			}
 
-			tabela_SDP[0]=tabela_SDP[0]/32;
+			tabela_SDP[0]=tabela_SDP[0]/32.0;
 			Savedata(2);
 
-			// tabela_HSC[0]=tabela_HSC[0]/32;
-			// Savedata(1);
+			tabela_HSC[0]=tabela_HSC[0]/32.0;
+			Savedata(1);
 
-			//BEGIN::AREA RESERVADA PARA DEBUGAR PROTOCOLO MANTER COMENTADO
+			//BEGIN::AREA RESERVADA PARA DEBUGAR PROTOCOLO, MANTER COMENTADO!
 			
-			// readdata(0);
-			// Readdata(1);
-			Readdata(2);
+			//END::AREA RESERVADA
 
-			uint8_t lFSCV[4];
-
-
-			memcpy(lFSCV,&tabela_HSC[0],4); 
-			uint8_t lFSCVI[4]= {lFSCV[3],lFSCV[2],lFSCV[1],lFSCV[0]};
-			SendMsg(lFSCVI,4);
-
-
-			//END
 			SendMsg(MSG,5);
 			lenBufferACK = sizeof(MSG);
 			memcpy(bufferACK,MSG,sizeof(MSG));
@@ -297,16 +300,69 @@ void CMD4(char *data){
 }
 
 
-void CMD5(char *data){
-	char MSG[] = {0x70,data[1],data[2]};
-	SendMsg(MSG,3);
-    lenBufferACK = sizeof(MSG);
+void CMD4(char *data){
+    char MSG[] = {ACK, data[1], data[2],0,0};
+	//  char MSG[] = {ACK, data[1], data[2],0,0,0,0};
+	uint8_t bufferSDP[3]={0};
+	uint8_t bufferHSC[2]={0};
+	signed short calc_press;
+
+	tabela_HSC[data[2]]=0;
+	tabela_SDP[data[2]]=0;
+
+	int k = 0;
+	
+	char aux3[4];
+	char aux2[4];
+	for(k = 0;k<32;k++){
+		ReadSensorI2C(bufferSDP, ADDRESS_SDP31 ,3);
+		k_usleep(500);
+		calc_press = ((bufferSDP[0]<<8 | bufferSDP[1]));
+		tabela_SDP[data[2]]  += calc_press/((escalaBufferSDP) * 100.0);
+
+		ReadSensorI2C(bufferHSC, ADDRESS_HSC ,2);
+		k_usleep(500);
+		tabela_HSC[data[2]] += ((((bufferHSC[0] & 0x3F)<<8 | bufferHSC[1])-0x0666)*(12.4541-(-12.4541))/(0x3999-0x0666) -12.4541);
+	}
+
+	tabela_SDP[data[2]]=abs((tabela_SDP[data[2]]/32.0)-tabela_SDP[0]);
+	Savedata(2);
+
+	tabela_HSC[data[2]]=abs((tabela_HSC[data[2]]/32.0) - tabela_HSC[0]);
+	Savedata(1);
+
+	//BEGIN::AREA RESERVADA PARA DEBUGAR PROTOCOLO, MANTER COMENTADO!
+
+	//END::AREA RESERVADA
+
+
+	int aux = (tabela_HSC[data[2]]*1000)/1;
+	MSG[3]= aux>>8;
+	MSG[4]= aux & 0x00FF;
+
+	SendMsg(MSG,5);
+	lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
 
-void CMD6(char *data){
-	char MSG[] = {0x80,data[1],data[2]};
-	SendMsg(MSG,3);
+void CMD5(char *data){
+	char MSG[128] ={0};
+	MSG[0] = ACK;
+	MSG[1] = data[1];
+	int aux = 0;
+	
+	for(int i=0;i<43;i++){
+		MSG[i*3+2] = tabflow[i];
+		if(i < 29){
+			aux = (tabela_SDP[i]*1000)/1;
+		}else{
+			aux = (tabela_HSC[i]*1000)/1;
+		}
+		MSG[i*3+3] = aux>>8;
+		MSG[i*3+4] = aux & 0x00FF;
+	}
+
+	SendMsg(MSG,128);
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
