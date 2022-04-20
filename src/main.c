@@ -14,35 +14,33 @@
 
 #include <zephyr.h>
 #include  "protocol-usb.h"
+#include  "sensor_controller.h"
+
+
 void main(void)
-{
-	ConfigureUSB();
-	ConfigureLFS();
-	ConfigureSDP();
+{	
+	// NRF_USBD_Type 
+	// DT_N_S_soc_S_uart_40002000_P_rx_pull_up
+	// NRF_USBD->USBPULLUP =  USBD_USBPULLUP_CONNECT_Enabled << USBD_USBPULLUP_CONNECT_Pos;
+	ConfigureUSB(); // COMUNICAÇÃO UART VIA USB
+	ConfigureLFS(); // SISTEMA DE ARQUIVOS
+	ConfigureSDP(); // SENSOR DE PRESÃO DIFERENCIAL SDP
+	ConfigurePin(); // PINO DO LED
+	ConfigureTimer(); // timer
 
-	// uint8_t lFSCV[4];
-	// memcpy(lFSCV,&escalaBufferSDP,4); 
-	// SendMsg(lFSCV,4);
-	// uint8_t lFSCV[4];
-	// uint8_t lFSCVI[4];
-	Readdata(1);
-	Readdata(2);
 
-		// memcpy(lFSCV,&tabela_HSC[0],4); 
-		// for (int i = 0;i<4;i++)lFSCVI[i]=lFSCV[3-i];
+	Readdata(0); // offset LPS
+	Readdata(1); // Tabela de fluxo HSC
+	Readdata(2); // Tabela de fluxo SDP
+	Readdata(3); // pontos FIO2
 
-		// SendMsg(lFSCVI,4);
-		
-		// memcpy(lFSCV,&tabela_SDP[0],4); 
-		
-		// for (int i = 0;i<4;i++)lFSCVI[i]=lFSCV[3-i];
-		// SendMsg(lFSCVI,4);
-	
 	while(1){
 		if(uart_irq_rx_ready(uart_dev)){
 			ReadMsg();
 		}
+		if(flagCE){
+			Telemetria();
+		}
 		k_sleep(K_MSEC(100));
-
 	}
 }

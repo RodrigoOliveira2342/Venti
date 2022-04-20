@@ -24,13 +24,13 @@
 #define NACK   0x15
 #define ACK    0x06
 
-#define abs(x) ((x)>0?(x):-(x))
-
 extern const struct device *uart_dev;
 extern uint8_t flagMsgRx;
 
 extern struct ring_buf ringbuf;
 extern uint8_t ring_buffer[RING_BUF_SIZE];
+
+extern uint8_t flagCE; 
 
 typedef void StatesCMD(char * Dados);
 
@@ -50,5 +50,10 @@ void ReadMsg();
 void EncapsulationMsgs(char *data1,char *data2,int len);
 void SendMsg(char*msg1,int len);
 void ProceduresMsg(char *data);
+
+void Telemetria();
+
+void ExpiryF(struct k_timer *timer_id);
+void ConfigureTimer();
 
 

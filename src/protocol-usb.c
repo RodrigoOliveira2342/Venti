@@ -11,6 +11,14 @@ uint8_t flagMsgRx= 0;
 char bufferACK[131];
 uint8_t lenBufferACK = 0;
 
+uint8_t flagUSBC = 0;
+// uint8_t flagBLEC = 0;
+uint8_t flagCE=0;
+uint8_t flagTimer1=0;
+
+struct k_timer my_timer;
+
+
 const struct device *i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
 
 const struct device *uart_dev ;
@@ -110,23 +118,24 @@ void ConfigureUSB(){
 		return;
 	}
 	ret = usb_enable(NULL);
-	if (ret != 0) {
+	if (ret != 0){
 		return;
 	}
 	ring_buf_init(&ringbuf, sizeof(ring_buffer), ring_buffer);
-	while (true) {
-		uart_line_ctrl_get(dev, UART_LINE_CTRL_DTR, &dtr);
-		if (dtr) {
-			break;
-		} else {
-			/* Give CPU resources to low priority threads. */
-			k_sleep(K_MSEC(100));
-		}
-	}
-	/* They are optional, we use them to test the interrupt endpoint */
-	ret = uart_line_ctrl_set(dev, UART_LINE_CTRL_DCD, 1);
-	ret = uart_line_ctrl_set(dev, UART_LINE_CTRL_DSR, 1);
-	/* Wait 1 sec for the host to do all settings */
+
+	// while (true) {
+	// 	uart_line_ctrl_get(dev, UART_LINE_CTRL_DTR, &dtr);
+	// 	if (dtr) {
+	// 		break;
+	// 	} else {
+	// 		/* Give CPU resources to low priority threads. */
+	// 		k_sleep(K_MSEC(100));
+	// 	}
+	// }
+	// /* They are optional, we use them to test the interrupt endpoint */
+	// ret = uart_line_ctrl_set(dev, UART_LINE_CTRL_DCD, 1);
+	// ret = uart_line_ctrl_set(dev, UART_LINE_CTRL_DSR, 1);
+	// /* Wait 1 sec for the host to do all settings */
 	k_busy_wait(1000000);
 
 	ret = uart_line_ctrl_get(dev, UART_LINE_CTRL_BAUD_RATE, &baudrate);
@@ -220,10 +229,20 @@ void CMD1(char *data){
 }
 
 void CMD2(char *data){
-	char MSG[] = {ACK,data[1],data[2]};
-	SendMsg(MSG,3);
-    lenBufferACK = sizeof(MSG);
-	memcpy(bufferACK,MSG,sizeof(MSG));
+    char MSG[] = {ACK, data[1], data[2]};
+	if(data[2] == 0x12 || data[2] == 0x21){
+		// SendMsg(MSG,3);
+		if(data[2] == 0x12){
+			flagCE = 1;
+		}else{
+			flagCE = 0;	
+		}
+	}
+	else{
+		MSG[0] = NACK;
+		SendMsg(MSG,3);
+	}
+	lenBufferACK = 0;
 }
 
 
@@ -259,8 +278,10 @@ void CMD3(char *data){
 			// char aux2[2];
 			// int aux4;
             for(k = 0;k<32;k++){
-
-                ReadSensorI2C(bufferSDP, ADDRESS_SDP31 ,3);
+				    
+				ReadSensorI2C(bufferSDP, ADDRESS_SDP31 ,3);
+				
+				
 				k_usleep(500);
 				calc_press = ((bufferSDP[0]<<8 | bufferSDP[1]));
                	tabela_SDP[0]  += calc_press/((escalaBufferSDP) * 100.0);
@@ -297,6 +318,11 @@ void CMD3(char *data){
 			lenBufferACK = sizeof(MSG);
 			memcpy(bufferACK,MSG,sizeof(MSG));
         }
+		else{
+			MSG[0]= NACK;
+			SendMsg(MSG,5);
+			lenBufferACK = 0;
+		}
 }
 
 
@@ -366,3 +392,66 @@ void CMD5(char *data){
     lenBufferACK = sizeof(MSG);
 	memcpy(bufferACK,MSG,sizeof(MSG));
 }
+
+void Telemetria(){
+	char MSG[] = {ACK,0x77,0,0,0,0,0,0};
+	uint8_t bufferSDP[3]={0};
+	uint8_t bufferHSC[2]={0};
+	signed short calc_press;
+	int auxEV = 0;
+	float SDP = 0;
+	float HSC = 0;
+	float fluxoSDP = 0;
+	float fluxoHSC = 0;
+	flagTimer1 = 0;
+	k_timer_start(&my_timer,K_USEC(750), K_USEC(750));
+	while(flagCE){
+			gpio_pin_set(dev1, PIN, (int)led_is_on);
+			led_is_on = !led_is_on;
+			ReadSensorI2C(bufferHSC, ADDRESS_HSC ,2);
+
+			while(!flagTimer1);  
+			flagTimer1 = 0;
+
+			ReadSensorI2C(bufferSDP, ADDRESS_SDP31 ,3);
+
+			HSC = ((((bufferHSC[0] & 0x3F)<<8 | bufferHSC[1])-0x0666)*(12.4541-(-12.4541))/(0x3999-0x0666) -12.4541);
+			HSC = HSC - tabela_HSC[0];
+			fluxoHSC = FlowCalc(HSC, tabela_HSC);
+
+			while(!flagTimer1);
+			flagTimer1 = 0;
+
+			calc_press = ((bufferSDP[0]<<8 | bufferSDP[1]));
+			SDP = (calc_press/((escalaBufferSDP) * 100.0));
+			SDP = SDP - tabela_SDP[0];
+			fluxoSDP = FlowCalc(SDP, tabela_SDP);
+
+
+			if((60 >= abs(fluxoSDP) &&   20 >= abs(abs(fluxoSDP) - abs(fluxoHSC)))){
+				auxEV = (fluxoSDP*100)/1;
+			}else{
+				auxEV = (HSC*100)/1;	
+			}
+
+			MSG[4] = auxEV>>8;
+			MSG[5] = auxEV & 0xFF;
+
+			SendMsg(MSG,8);
+    		lenBufferACK = sizeof(MSG);
+			memcpy(bufferACK,MSG,sizeof(MSG));
+
+			if(uart_irq_rx_ready(uart_dev)){
+				ReadMsg();
+			}
+	}
+	k_timer_stop(&my_timer);
+}
+
+	void ExpiryF(struct k_timer *timer_id){
+		flagTimer1 = 1;
+	}
+
+    void ConfigureTimer(){
+		k_timer_init(&my_timer, ExpiryF, NULL);
+    }
